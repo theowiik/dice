@@ -1,8 +1,8 @@
 <script>
-  let count = $state(0)
-  const increment = () => {
-    count += 1
-  }
+let _count = $state(0);
+const _increment = () => {
+	_count += 1;
+};
 </script>
 
 <button onclick={increment}>
