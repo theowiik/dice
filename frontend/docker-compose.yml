@@ -1,0 +1,34 @@
+services:
+  prod:
+    build:
+      context: .
+      target: prod
+    image: frontend:prod
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  dev:
+    build:
+      context: .
+      target: dev
+    image: frontend:dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+
+  ci:
+    build:
+      context: .
+      target: ci
+    image: frontend:ci
+    volumes:
+      - .:/app
+      - /app/node_modules
+    profiles:
+      - ci
