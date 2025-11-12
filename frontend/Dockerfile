@@ -1,7 +1,10 @@
-# Base stage with Node.js, Python, and pnpm
+# Base stage with Node.js and pnpm
 FROM node:24-alpine AS base
-RUN apk add --no-cache python3 py3-pip \
-    && npm install -g pnpm@10.22.0
+ENV PNPM_HOME="/root/.local/share/pnpm" \
+    PNPM_VERSION="10.22.0" \
+    PATH="${PNPM_HOME}:${PATH}"
+RUN corepack enable pnpm \
+    && corepack prepare "pnpm@${PNPM_VERSION}" --activate
 WORKDIR /app
 
 # Dependencies stage
@@ -31,6 +34,7 @@ CMD ["pnpm", "dev", "--host", "0.0.0.0", "--port", "5173", "--strictPort"]
 
 # CI check image
 FROM base AS ci
+RUN apk add --no-cache python3 py3-pip
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 CMD ["python3", "ci_check.py"]
