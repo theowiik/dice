@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  prod:
+    build:
+      context: .
+      target: prod
+    image: frontend:prod
+    ports:
+      - "8080:3000"
+    restart: unless-stopped
+
+  dev:
+    build:
+      context: .
+      target: dev
+    image: frontend:dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+
+  ci:
+    build:
+      context: .
+      target: ci
+    image: frontend:ci
+    volumes:
+      - .:/app
+      - /app/node_modules
+    profiles:
+      - ci
