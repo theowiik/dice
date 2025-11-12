@@ -1,36 +1,33 @@
-# Base stage with Node.js and Python
+# Base stage with Node.js, Python, and pnpm
 FROM node:24-alpine AS base
-RUN apk add --no-cache python3 py3-pip
+RUN apk add --no-cache python3 py3-pip \
+    && npm install -g pnpm@10.22.0
 WORKDIR /app
 
 # Dependencies stage
 FROM base AS deps
-COPY package.json package-lock.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 # Production build stage
-FROM base AS prod-build
+FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN npm run build
+RUN pnpm build
 
-# Production image
-FROM node:24-alpine AS prod
-WORKDIR /app
-ENV NODE_ENV=production
-COPY --from=prod-build /app/.next/standalone ./
-COPY --from=prod-build /app/.next/static ./.next/static
-COPY --from=prod-build /app/public ./public
-EXPOSE 3000
-CMD ["node", "server.js"]
+# Production image (static assets served by nginx)
+FROM nginx:1.27-alpine AS prod
+COPY --from=build /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
 
 # Development image
 FROM base AS dev
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-EXPOSE 3000
+EXPOSE 5173
 ENV NODE_ENV=development
-CMD ["npm", "run", "dev"]
+CMD ["pnpm", "dev", "--host", "0.0.0.0", "--port", "5173", "--strictPort"]
 
 # CI check image
 FROM base AS ci
