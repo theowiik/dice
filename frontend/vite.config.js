@@ -4,5 +4,7 @@ import { defineConfig } from "vite";
 // https://vite.dev/config/
 export default defineConfig({
 	plugins: [svelte()],
-	base: process.env.BASE_PATH || "/",
+	// Use relative paths for better GitHub Pages compatibility
+	// Works with both custom domains and project pages
+	base: process.env.BASE_PATH || "./",
 });

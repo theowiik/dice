@@ -10,6 +10,7 @@ import re
 
 checks: list[tuple[str, str | Callable[[], bool]]] = [
     ("Biome check", "pnpm run check"),
+    ("Build", "pnpm run build"),
 ]
 
 def _run_cmd(cmd: str) -> bool:
