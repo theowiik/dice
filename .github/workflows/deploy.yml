@@ -42,7 +42,7 @@ jobs:
       - name: Build
         working-directory: ./frontend
         env:
-          BASE_PATH: "/"
+          BASE_PATH: "./"
         run: pnpm build
 
       - name: Setup Pages
