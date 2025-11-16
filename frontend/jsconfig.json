@@ -8,9 +8,10 @@
 		"resolveJsonModule": true,
 		"sourceMap": true,
 		"esModuleInterop": true,
+		"jsx": "react-jsx",
 		"types": ["vite/client"],
 		"skipLibCheck": true,
 		"checkJs": true
 	},
-	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.svelte"]
+	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.jsx"]
 }
