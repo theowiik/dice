@@ -10,7 +10,7 @@ export default function CustomDiceInput({ value, onInput, onRoll, disabled }) {
           max="1000000"
           value={value}
           onInput={onInput}
-          placeholder="Enter 1-1,000,000"
+          placeholder="Sides"
           className="flex-1 px-4 py-3 bg-stone-700 border-2 border-stone-600 rounded-lg text-center text-lg font-semibold text-stone-100 placeholder-stone-400 focus:outline-none focus:border-stone-500 focus:ring-2 focus:ring-stone-500/30 transition-all"
         />
         <button
@@ -22,9 +22,6 @@ export default function CustomDiceInput({ value, onInput, onRoll, disabled }) {
           Roll
         </button>
       </div>
-      <p className="text-xs text-stone-400 mt-2 text-center">
-        Enter a number between 1 and 1,000,000
-      </p>
     </div>
   );
 }

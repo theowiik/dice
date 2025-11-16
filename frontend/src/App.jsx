@@ -96,7 +96,7 @@ export default function App() {
         </div>
 
         <div className="flex flex-col items-center gap-6 w-full max-w-2xl px-4 sm:px-8">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full">
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
             {DICE_CONFIGS.map((config) => (
               <DiceButton
                 key={config.sides}
