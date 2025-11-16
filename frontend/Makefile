@@ -6,6 +6,7 @@ help:
 	@echo "  dev     - Run development server"
 	@echo "  format  - Format code"
 	@echo "  ci      - Run CI checks"
+	@echo "  preview - Preview production build"
 	@echo ""
 	@echo "Docker:"
 	@echo "  docker-dev   - Run development container"
@@ -21,6 +22,11 @@ format:
 
 ci:
 	python3 ci_check.py
+
+preview:
+	rm -rf dist
+	pnpm build
+	pnpm preview
 
 docker-dev:
 	docker compose up --build dev
