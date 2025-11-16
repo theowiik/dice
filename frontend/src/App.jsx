@@ -27,7 +27,7 @@ const DICE_CONFIGS = [
   },
   {
     sides: 500,
-    label: 'D500 ☢️',
+    label: '☢️ D500',
     colorClass:
       'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
   },
@@ -95,33 +95,35 @@ export default function App() {
           />
         </div>
 
-        <div className="flex flex-col items-center gap-6 w-full max-w-2xl px-4 sm:px-8">
-          <div className="flex flex-wrap justify-center gap-3 sm:gap-4 w-full">
-            {DICE_CONFIGS.map((config) => (
+        <div className="flex flex-col items-center gap-6 px-4 sm:px-8">
+          <div className="inline-flex flex-col items-stretch gap-6">
+            <div className="flex flex-wrap justify-center gap-3">
+              {DICE_CONFIGS.map((config) => (
+                <DiceButton
+                  key={config.sides}
+                  label={config.label}
+                  onClick={() => handleDiceClick(config.sides)}
+                  disabled={isRolling}
+                  colorClass={config.colorClass}
+                />
+              ))}
               <DiceButton
-                key={config.sides}
-                label={config.label}
-                onClick={() => handleDiceClick(config.sides)}
+                label="Custom"
+                onClick={handleCustomClick}
                 disabled={isRolling}
-                colorClass={config.colorClass}
+                colorClass="from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700"
               />
-            ))}
-            <DiceButton
-              label="Custom"
-              onClick={handleCustomClick}
-              disabled={isRolling}
-              colorClass="from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700"
-            />
-          </div>
+            </div>
 
-          {showCustomInput && (
-            <CustomDiceInput
-              value={customValue}
-              onInput={handleCustomInput}
-              onRoll={handleCustomRoll}
-              disabled={isRolling}
-            />
-          )}
+            {showCustomInput && (
+              <CustomDiceInput
+                value={customValue}
+                onInput={handleCustomInput}
+                onRoll={handleCustomRoll}
+                disabled={isRolling}
+              />
+            )}
+          </div>
         </div>
       </div>
     </main>
