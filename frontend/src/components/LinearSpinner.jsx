@@ -204,10 +204,11 @@ const LinearSpinner = forwardRef(
       const itemWidth = itemWidthRef.current;
       currentScrollRef.current = 0;
       // Stop at target number position (before extra numbers)
-      const targetIndex = sequence.findIndex((num, idx) => 
-        num === newFinalValue && idx > sequence.length - 15
+      const targetIndex = sequence.findIndex(
+        (num, idx) => num === newFinalValue && idx > sequence.length - 15,
       );
-      targetScrollRef.current = (targetIndex !== -1 ? targetIndex : sequence.length - 11) * itemWidth;
+      targetScrollRef.current =
+        (targetIndex !== -1 ? targetIndex : sequence.length - 11) * itemWidth;
 
       updateVisibleNumbers(0);
 
@@ -231,20 +232,12 @@ const LinearSpinner = forwardRef(
     return (
       <div
         ref={containerRef}
-        className="w-full h-full flex items-center justify-center overflow-hidden select-none"
+        className="w-screen h-full flex items-center justify-center overflow-hidden select-none"
       >
         <div
-          className="relative w-full overflow-hidden"
+          className="relative w-full overflow-visible"
           style={{ height: 'clamp(6rem, 35vh, 24rem)' }}
         >
-          <div
-            className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-blue-500 to-transparent opacity-30 pointer-events-none z-10"
-            style={{ transform: 'translateX(-50%)' }}
-          />
-
-          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-10" />
-          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-10" />
-
           <div className="absolute inset-0 flex items-center">
             <div className="relative w-full h-full flex items-center">
               {displayNumbers.length > 0 ? (
@@ -288,7 +281,7 @@ const LinearSpinner = forwardRef(
                         lineHeight: 1,
                         fontWeight: 700,
                         fontFamily: '"Reddit Mono", ui-monospace, monospace',
-                        color: '#1e293b',
+                        color: '#e2e8f0',
                         opacity: opacity,
                         transition: t >= 1 ? 'transform 0.3s ease-out' : 'none',
                       }}
@@ -307,10 +300,10 @@ const LinearSpinner = forwardRef(
                     lineHeight: 1,
                     fontWeight: 700,
                     fontFamily: '"Reddit Mono", ui-monospace, monospace',
-                    color: '#1e293b',
+                    color: '#e2e8f0',
                   }}
                 >
-                  ?
+                  Dice
                 </div>
               )}
             </div>

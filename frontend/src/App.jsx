@@ -11,25 +11,25 @@ const DICE_CONFIGS = [
     sides: 6,
     label: 'D6',
     colorClass:
-      'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
   },
   {
     sides: 8,
     label: 'D8',
     colorClass:
-      'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
+      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
   },
   {
     sides: 20,
     label: 'D20',
     colorClass:
-      'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
+      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
   },
   {
     sides: 500,
     label: 'D500 ☢️',
     colorClass:
-      'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
+      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
   },
 ];
 
@@ -85,7 +85,7 @@ export default function App() {
   };
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
+    <main className="min-h-screen flex flex-col items-center justify-center bg-stone-900">
       <div className="w-full flex flex-col items-center gap-8">
         <div className="w-full spinner-fullscreen flex items-center justify-center">
           <LinearSpinner
@@ -95,7 +95,7 @@ export default function App() {
           />
         </div>
 
-        <div className="flex flex-col items-center gap-6 w-full max-w-2xl">
+        <div className="flex flex-col items-center gap-6 w-full max-w-2xl px-4 sm:px-8">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full">
             {DICE_CONFIGS.map((config) => (
               <DiceButton
@@ -110,7 +110,7 @@ export default function App() {
               label="Custom"
               onClick={handleCustomClick}
               disabled={isRolling}
-              colorClass="from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700"
+              colorClass="from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700"
             />
           </div>
 
