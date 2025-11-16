@@ -11,7 +11,7 @@ let finalValue = $state(null);
 let container;
 let viewportWidth = $state(0);
 let itemWidth = $state(0);
-let _centerOffsetPx = $state(0);
+let centerOffsetPx = $state(0);
 
 // Animation
 let rafId = null;
@@ -48,7 +48,7 @@ function measure() {
 	const rect = container.getBoundingClientRect();
 	viewportWidth = rect.width || 0;
 	itemWidth = viewportWidth; // single number fills viewport
-	_centerOffsetPx = (viewportWidth - itemWidth) / 2; // likely 0, but explicit
+	centerOffsetPx = (viewportWidth - itemWidth) / 2; // likely 0, but explicit
 }
 
 // --- Tick sound (WebAudio) ---
