@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+	margin: 0;
+	padding: 0;
+	background: #ffffff;
+	font-family:
+		"Momo Trust Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+		Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
+		"Segoe UI Symbol";
+	min-height: 100vh;
+}
