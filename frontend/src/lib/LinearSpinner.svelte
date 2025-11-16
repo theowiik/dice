@@ -6,10 +6,11 @@ const REPEATS = 5;
 
 let isSpinning = $state(false);
 let finalValue = $state(null);
+let _activeSides = $state(20); // Track sides value during current roll
 let container;
 let viewportWidth = $state(0);
 let itemWidth = $state(0);
-let centerOffsetPx = $state(0);
+let _centerOffsetPx = $state(0);
 let rafId = null;
 let startTime = 0;
 let durationMs = 0;
@@ -21,7 +22,8 @@ let audioCtx = null;
 
 const clampSides = (n) => Math.max(2, Math.floor(n || 2));
 const easeOutCubic = (t) => 1 - (1 - t) ** 3;
-const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const randomInt = (min, max) =>
+	Math.floor(Math.random() * (max - min + 1)) + min;
 
 function cancelRaf() {
 	if (rafId != null) {
@@ -35,7 +37,7 @@ function measure() {
 	const rect = container.getBoundingClientRect();
 	viewportWidth = rect.width || 0;
 	itemWidth = viewportWidth;
-	centerOffsetPx = (viewportWidth - itemWidth) / 2;
+	_centerOffsetPx = (viewportWidth - itemWidth) / 2;
 }
 
 function ensureAudio() {
@@ -90,6 +92,7 @@ onDestroy(() => cancelRaf());
 export function roll() {
 	if (isSpinning) return;
 	const totalSides = clampSides(sides);
+	_activeSides = totalSides; // Lock in the sides value for this roll
 	measure();
 	if (itemWidth === 0) return;
 
@@ -99,7 +102,10 @@ export function roll() {
 	const startIndex = startLoop + randomInt(0, totalSides - 1);
 	const extraLoops = 2 + Math.floor(Math.random() * 2);
 	const desiredIndexMod = (finalValue - 1 + totalSides) % totalSides;
-	const delta = (((desiredIndexMod - (startIndex % totalSides)) % totalSides) + totalSides) % totalSides;
+	const delta =
+		(((desiredIndexMod - (startIndex % totalSides)) % totalSides) +
+			totalSides) %
+		totalSides;
 	const targetIndex = startIndex + extraLoops * totalSides + delta;
 
 	startPos = startIndex;
@@ -143,10 +149,10 @@ function step(now) {
 		<div class="relative w-full" style="height: clamp(6rem, 35vh, 24rem);">
 			<div class="absolute inset-0 flex items-center">
 				<div class="flex items-center" style="transform: translateX(-{currentPos * itemWidth - centerOffsetPx}px); will-change: transform;">
-					{#each Array(REPEATS * clampSides(sides)) as _, idx}
+					{#each Array(REPEATS * activeSides) as _, idx}
 						<div class="shrink-0 flex items-center justify-center" style="width: {itemWidth}px;">
 							<div style="font-size: clamp(5rem, 26vw, 20rem); line-height: 1;">
-								{(idx % clampSides(sides)) + 1}
+								{(idx % activeSides) + 1}
 							</div>
 						</div>
 					{/each}

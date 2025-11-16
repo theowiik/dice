@@ -1,11 +1,9 @@
 <script>
-import LinearSpinner from './lib/LinearSpinner.svelte';
-
-let diceType = $state(20);
+let _diceType = $state(20);
 let diceComponent;
-let lastResult = $state(null);
+let _lastResult = $state(null);
 let isRolling = $state(false);
-let customValue = $state('');
+let customValue = $state("");
 let showCustomInput = $state(false);
 
 const MAX_SIDES = 1000000;
@@ -14,40 +12,40 @@ const MIN_SIDES = 1;
 function handleRoll() {
 	if (isRolling) return;
 	isRolling = true;
-	lastResult = null;
+	_lastResult = null;
 	diceComponent?.roll();
 }
 
-function handleRollComplete(result) {
-	lastResult = result;
+function _handleRollComplete(result) {
+	_lastResult = result;
 	isRolling = false;
 }
 
-function handleDiceClick(sides) {
+function _handleDiceClick(sides) {
 	if (isRolling) return;
-	diceType = sides;
+	_diceType = sides;
 	showCustomInput = false;
 	handleRoll();
 }
 
-function handleCustomClick() {
+function _handleCustomClick() {
 	showCustomInput = !showCustomInput;
 }
 
-function handleCustomInput(event) {
+function _handleCustomInput(event) {
 	const value = parseInt(event.target.value, 10);
-	if (!isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
+	if (!Number.isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
 		customValue = value.toString();
-		diceType = value;
-	} else if (event.target.value === '') {
-		customValue = '';
+		_diceType = value;
+	} else if (event.target.value === "") {
+		customValue = "";
 	}
 }
 
-function handleCustomRoll() {
+function _handleCustomRoll() {
 	const value = parseInt(customValue, 10);
-	if (!isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
-		diceType = value;
+	if (!Number.isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
+		_diceType = value;
 		handleRoll();
 	}
 }
