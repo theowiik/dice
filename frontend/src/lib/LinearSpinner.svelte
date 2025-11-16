@@ -148,11 +148,11 @@ function step(now) {
 	{#if isSpinning}
 		<div class="relative w-full" style="height: clamp(6rem, 35vh, 24rem);">
 			<div class="absolute inset-0 flex items-center">
-				<div class="flex items-center" style="transform: translateX(-{currentPos * itemWidth - centerOffsetPx}px); will-change: transform;">
-					{#each Array(REPEATS * activeSides) as _, idx}
+				<div class="flex items-center" style="transform: translateX(-{currentPos * itemWidth - _centerOffsetPx}px); will-change: transform;">
+					{#each Array(REPEATS * _activeSides) as _, idx}
 						<div class="shrink-0 flex items-center justify-center" style="width: {itemWidth}px;">
 							<div style="font-size: clamp(5rem, 26vw, 20rem); line-height: 1;">
-								{(idx % activeSides) + 1}
+								{(idx % _activeSides) + 1}
 							</div>
 						</div>
 					{/each}
