@@ -1,21 +1,17 @@
 .PHONY: help dev format ci docker-prod docker-dev docker-down docker-ci
-
 .DEFAULT_GOAL := help
 
 help:
-	@echo "Usage: make <target>"
+	@echo "Development:"
+	@echo "  dev     - Run development server"
+	@echo "  format  - Format code"
+	@echo "  ci      - Run CI checks"
 	@echo ""
-	@echo "Targets:"
-	@echo "  help        - Show this help message"
-	@echo "  dev         - Run the development server"
-	@echo "  format      - Format the code"
-	@echo "  ci          - Run the CI checks"
-	@echo ""
-	@echo "Docker Targets:"
-	@echo "  docker-dev  - Run development container"
-	@echo "  docker-prod - Run production container"
-	@echo "  docker-down - Stop all containers"
-	@echo "  docker-ci   - Run CI checks in Docker"
+	@echo "Docker:"
+	@echo "  docker-dev   - Run development container"
+	@echo "  docker-prod  - Run production container"
+	@echo "  docker-down  - Stop all containers"
+	@echo "  docker-ci    - Run CI in Docker"
 
 dev:
 	pnpm run dev
