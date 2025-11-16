@@ -120,6 +120,12 @@ const LinearSpinner = forwardRef(
 
       sequence.push(targetNumber);
 
+      // Add extra numbers after target to create infinite illusion
+      const extraCount = 10;
+      for (let i = 0; i < extraCount; i++) {
+        sequence.push(randomInt(1, totalSides));
+      }
+
       return sequence;
     };
 
@@ -186,12 +192,22 @@ const LinearSpinner = forwardRef(
       const newFinalValue = randomInt(1, totalSides);
       setFinalValue(newFinalValue);
 
+      // Calculate item width based on number of digits
+      const maxDigits = totalSides.toString().length;
+      const baseWidth = 200;
+      const widthPerDigit = 80;
+      itemWidthRef.current = baseWidth + (maxDigits - 1) * widthPerDigit;
+
       const sequence = generateSpinSequence(totalSides, newFinalValue);
       fullSequenceRef.current = sequence;
 
       const itemWidth = itemWidthRef.current;
       currentScrollRef.current = 0;
-      targetScrollRef.current = (sequence.length - 1) * itemWidth;
+      // Stop at target number position (before extra numbers)
+      const targetIndex = sequence.findIndex((num, idx) => 
+        num === newFinalValue && idx > sequence.length - 15
+      );
+      targetScrollRef.current = (targetIndex !== -1 ? targetIndex : sequence.length - 11) * itemWidth;
 
       updateVisibleNumbers(0);
 
@@ -217,29 +233,31 @@ const LinearSpinner = forwardRef(
         ref={containerRef}
         className="w-full h-full flex items-center justify-center overflow-hidden select-none"
       >
-        {isSpinning ? (
+        <div
+          className="relative w-full overflow-hidden"
+          style={{ height: 'clamp(6rem, 35vh, 24rem)' }}
+        >
           <div
-            className="relative w-full overflow-hidden"
-            style={{ height: 'clamp(6rem, 35vh, 24rem)' }}
-          >
-            <div
-              className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-blue-500 to-transparent opacity-30 pointer-events-none z-10"
-              style={{ transform: 'translateX(-50%)' }}
-            />
+            className="absolute left-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-transparent via-blue-500 to-transparent opacity-30 pointer-events-none z-10"
+            style={{ transform: 'translateX(-50%)' }}
+          />
 
-            <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-10" />
-            <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-10" />
+          <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-slate-50 to-transparent pointer-events-none z-10" />
+          <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-slate-50 to-transparent pointer-events-none z-10" />
 
-            <div className="absolute inset-0 flex items-center">
-              <div className="relative w-full h-full flex items-center">
-                {displayNumbers.map((item) => {
+          <div className="absolute inset-0 flex items-center">
+            <div className="relative w-full h-full flex items-center">
+              {displayNumbers.length > 0 ? (
+                displayNumbers.map((item) => {
                   const currentScroll = currentScrollRef.current;
                   const targetScroll = targetScrollRef.current;
-                  const t = Math.min(
-                    1,
-                    (performance.now() - startTimeRef.current) /
-                      durationMsRef.current,
-                  );
+                  const t = isSpinning
+                    ? Math.min(
+                        1,
+                        (performance.now() - startTimeRef.current) /
+                          durationMsRef.current,
+                      )
+                    : 1;
                   const eased = easeOutQuart(t);
                   const interpolatedScroll =
                     currentScroll + (targetScroll - currentScroll) * eased;
@@ -269,6 +287,7 @@ const LinearSpinner = forwardRef(
                         fontSize: 'clamp(4rem, 20vw, 16rem)',
                         lineHeight: 1,
                         fontWeight: 700,
+                        fontFamily: '"Reddit Mono", ui-monospace, monospace',
                         color: '#1e293b',
                         opacity: opacity,
                         transition: t >= 1 ? 'transform 0.3s ease-out' : 'none',
@@ -277,32 +296,26 @@ const LinearSpinner = forwardRef(
                       {item.value}
                     </div>
                   );
-                })}
-              </div>
+                })
+              ) : (
+                <div
+                  className="absolute flex items-center justify-center"
+                  style={{
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    fontSize: 'clamp(5rem, 26vw, 20rem)',
+                    lineHeight: 1,
+                    fontWeight: 700,
+                    fontFamily: '"Reddit Mono", ui-monospace, monospace',
+                    color: '#1e293b',
+                  }}
+                >
+                  ?
+                </div>
+              )}
             </div>
           </div>
-        ) : (
-          <div
-            className="w-full"
-            style={{
-              height: 'clamp(6rem, 35vh, 24rem)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <div
-              style={{
-                fontSize: 'clamp(5rem, 26vw, 20rem)',
-                lineHeight: 1,
-                fontWeight: 700,
-                color: '#1e293b',
-              }}
-            >
-              {finalValue ?? '?'}
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     );
   },

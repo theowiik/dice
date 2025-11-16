@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Momo+Trust+Display&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Reddit+Mono:wght@200..900&display=swap");
 
 body {
   margin: 0;

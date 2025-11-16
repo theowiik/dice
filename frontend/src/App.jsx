@@ -25,11 +25,16 @@ const DICE_CONFIGS = [
     colorClass:
       'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
   },
+  {
+    sides: 500,
+    label: 'D500 ☢️',
+    colorClass:
+      'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
+  },
 ];
 
 export default function App() {
   const [diceType, setDiceType] = useState(20);
-  const [lastResult, setLastResult] = useState(null);
   const [isRolling, setIsRolling] = useState(false);
   const [customValue, setCustomValue] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
@@ -38,12 +43,10 @@ export default function App() {
   const handleRoll = () => {
     if (isRolling) return;
     setIsRolling(true);
-    setLastResult(null);
     diceComponentRef.current?.roll();
   };
 
-  const handleRollComplete = (result) => {
-    setLastResult(result);
+  const handleRollComplete = () => {
     setIsRolling(false);
   };
 
@@ -54,7 +57,6 @@ export default function App() {
     setTimeout(() => {
       if (!isRolling) {
         setIsRolling(true);
-        setLastResult(null);
         diceComponentRef.current?.roll();
       }
     }, 0);
@@ -84,7 +86,7 @@ export default function App() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center p-4 sm:p-8 bg-gradient-to-br from-slate-50 to-slate-100">
-      <div className="w-full max-w-5xl flex flex-col items-center gap-8">
+      <div className="w-full flex flex-col items-center gap-8">
         <div className="w-full spinner-fullscreen flex items-center justify-center">
           <LinearSpinner
             ref={diceComponentRef}
@@ -119,17 +121,6 @@ export default function App() {
               onRoll={handleCustomRoll}
               disabled={isRolling}
             />
-          )}
-
-          {lastResult !== null && (
-            <div className="bg-white rounded-xl shadow-lg px-6 py-4 border border-slate-200 animate-fadeIn">
-              <p className="text-lg text-slate-700">
-                Result:{' '}
-                <span className="font-bold text-2xl text-slate-900">
-                  D{diceType} = {lastResult}
-                </span>
-              </p>
-            </div>
           )}
         </div>
       </div>
