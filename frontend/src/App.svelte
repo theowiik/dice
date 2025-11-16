@@ -8,13 +8,14 @@ let isRolling = $state(false);
 let customValue = $state('');
 let showCustomInput = $state(false);
 
+const MAX_SIDES = 1000000;
+const MIN_SIDES = 1;
+
 function handleRoll() {
 	if (isRolling) return;
 	isRolling = true;
 	lastResult = null;
-	if (diceComponent) {
-		diceComponent.roll();
-	}
+	diceComponent?.roll();
 }
 
 function handleRollComplete(result) {
@@ -35,7 +36,7 @@ function handleCustomClick() {
 
 function handleCustomInput(event) {
 	const value = parseInt(event.target.value, 10);
-	if (!isNaN(value) && value >= 1 && value <= 1000000) {
+	if (!isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
 		customValue = value.toString();
 		diceType = value;
 	} else if (event.target.value === '') {
@@ -45,7 +46,7 @@ function handleCustomInput(event) {
 
 function handleCustomRoll() {
 	const value = parseInt(customValue, 10);
-	if (!isNaN(value) && value >= 1 && value <= 1000000) {
+	if (!isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
 		diceType = value;
 		handleRoll();
 	}
@@ -63,7 +64,6 @@ function handleCustomRoll() {
 		</div>
 		
 		<div class="flex flex-col items-center gap-6 w-full max-w-2xl">
-			<!-- Dice Buttons -->
 			<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 w-full">
 				<button
 					onclick={() => handleDiceClick(6)}
@@ -102,7 +102,6 @@ function handleCustomRoll() {
 				</button>
 			</div>
 			
-			<!-- Custom Input Section -->
 			{#if showCustomInput}
 				<div class="w-full bg-white rounded-xl shadow-lg p-6 border border-slate-200 animate-fadeIn">
 					<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
@@ -127,7 +126,6 @@ function handleCustomRoll() {
 				</div>
 			{/if}
 			
-			<!-- Result Display -->
 			{#if lastResult !== null}
 				<div class="bg-white rounded-xl shadow-lg px-6 py-4 border border-slate-200 animate-fadeIn">
 					<p class="text-lg text-slate-700">
