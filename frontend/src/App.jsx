@@ -61,12 +61,12 @@ export default function App() {
     setShowNuke(false);
   };
 
-  // Secret keyboard shortcut: Ctrl+Shift+N or Cmd+Shift+N
+  // Secret keyboard shortcut: Ctrl+Alt+N or Cmd+Alt+N
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (
         (event.ctrlKey || event.metaKey) &&
-        event.shiftKey &&
+        event.altKey &&
         event.key.toLowerCase() === 'n'
       ) {
         event.preventDefault();
