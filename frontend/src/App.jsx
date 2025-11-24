@@ -1,10 +1,12 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CustomDiceInput from './components/CustomDiceInput';
 import DiceButton from './components/DiceButton';
 import LinearSpinner from './components/LinearSpinner';
+import Nuke from './components/Nuke';
 
 const MAX_SIDES = 1000000;
 const MIN_SIDES = 1;
+const NUKE_TRIGGER = 500;
 
 const DICE_CONFIGS = [
   {
@@ -38,6 +40,7 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [customValue, setCustomValue] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [showNuke, setShowNuke] = useState(false);
   const diceComponentRef = useRef(null);
 
   const handleRoll = () => {
@@ -46,9 +49,36 @@ export default function App() {
     diceComponentRef.current?.roll();
   };
 
-  const handleRollComplete = () => {
+  const handleRollComplete = (finalValue) => {
     setIsRolling(false);
+    // Trigger nuke if roll is exactly 500
+    if (finalValue === NUKE_TRIGGER) {
+      setShowNuke(true);
+    }
   };
+
+  const handleNukeComplete = () => {
+    setShowNuke(false);
+  };
+
+  // Secret keyboard shortcut: Ctrl+Shift+N or Cmd+Shift+N
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.shiftKey &&
+        event.key.toLowerCase() === 'n'
+      ) {
+        event.preventDefault();
+        setShowNuke(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const handleDiceClick = (sides) => {
     if (isRolling) return;
@@ -86,6 +116,8 @@ export default function App() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-stone-900">
+      {showNuke && <Nuke onComplete={handleNukeComplete} />}
+
       <div className="w-full flex flex-col items-center gap-8">
         <div className="w-full spinner-fullscreen flex items-center justify-center">
           <LinearSpinner
