@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
 import CustomDiceInput from './components/CustomDiceInput';
 import DiceButton from './components/DiceButton';
 import LinearSpinner from './components/LinearSpinner';
@@ -86,6 +87,14 @@ export default function App() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-stone-900">
+      {/* Nuke Button in top right */}
+      <Link
+        to="/nuke"
+        className="absolute top-8 right-8 px-6 py-3 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200"
+      >
+        ☢️ NUKE
+      </Link>
+
       <div className="w-full flex flex-col items-center gap-8">
         <div className="w-full spinner-fullscreen flex items-center justify-center">
           <LinearSpinner
