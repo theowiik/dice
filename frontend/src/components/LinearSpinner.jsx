@@ -8,7 +8,7 @@ import {
   useState,
 } from 'react';
 
-const clampSides = (n) => Math.max(2, Math.floor(n || 2));
+const clampSides = (n) => Math.max(1, Math.floor(n || 1));
 const easeOutQuart = (t) => 1 - (1 - t) ** 4;
 const randomInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
