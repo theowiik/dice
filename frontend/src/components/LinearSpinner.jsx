@@ -16,7 +16,7 @@ const randomInt = (min, max) =>
 const LinearSpinner = forwardRef(
   ({ sides = 20, onRollComplete = () => {} }, ref) => {
     const [isSpinning, setIsSpinning] = useState(false);
-    const [finalValue, setFinalValue] = useState(null);
+    const [_finalValue, setFinalValue] = useState(null);
     const [displayNumbers, setDisplayNumbers] = useState([]);
 
     const containerRef = useRef(null);
@@ -29,6 +29,7 @@ const LinearSpinner = forwardRef(
     const lastTickIndexRef = useRef(-1);
     const audioCtxRef = useRef(null);
     const itemWidthRef = useRef(200);
+    const finalValueRef = useRef(null);
 
     const cancelRaf = useCallback(() => {
       if (rafIdRef.current != null) {
@@ -182,7 +183,7 @@ const LinearSpinner = forwardRef(
       }
 
       setIsSpinning(false);
-      onRollComplete(finalValue);
+      onRollComplete?.(finalValueRef.current);
     };
 
     const roll = () => {
@@ -191,6 +192,7 @@ const LinearSpinner = forwardRef(
       const totalSides = clampSides(sides);
       const newFinalValue = randomInt(1, totalSides);
       setFinalValue(newFinalValue);
+      finalValueRef.current = newFinalValue;
 
       // Calculate item width based on number of digits
       const maxDigits = totalSides.toString().length;

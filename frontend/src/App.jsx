@@ -1,11 +1,12 @@
-import { useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 import CustomDiceInput from './components/CustomDiceInput';
 import DiceButton from './components/DiceButton';
 import LinearSpinner from './components/LinearSpinner';
+import Nuke from './components/Nuke';
 
 const MAX_SIDES = 1000000;
 const MIN_SIDES = 1;
+const NUKE_TRIGGER = 500;
 
 const DICE_CONFIGS = [
   {
@@ -39,6 +40,7 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [customValue, setCustomValue] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [showNuke, setShowNuke] = useState(false);
   const diceComponentRef = useRef(null);
 
   const handleRoll = () => {
@@ -47,9 +49,36 @@ export default function App() {
     diceComponentRef.current?.roll();
   };
 
-  const handleRollComplete = () => {
+  const handleRollComplete = (finalValue) => {
     setIsRolling(false);
+    // Trigger nuke if roll is exactly 500
+    if (finalValue === NUKE_TRIGGER) {
+      setShowNuke(true);
+    }
   };
+
+  const handleNukeComplete = () => {
+    setShowNuke(false);
+  };
+
+  // Secret keyboard shortcut: Ctrl+Shift+N or Cmd+Shift+N
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.shiftKey &&
+        event.key.toLowerCase() === 'n'
+      ) {
+        event.preventDefault();
+        setShowNuke(true);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   const handleDiceClick = (sides) => {
     if (isRolling) return;
@@ -87,13 +116,7 @@ export default function App() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-stone-900">
-      {/* Nuke Button in top right */}
-      <Link
-        to="/nuke"
-        className="absolute top-8 right-8 px-6 py-3 bg-gradient-to-br from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white rounded-xl font-bold shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200"
-      >
-        ☢️ NUKE
-      </Link>
+      {showNuke && <Nuke onComplete={handleNukeComplete} />}
 
       <div className="w-full flex flex-col items-center gap-8">
         <div className="w-full spinner-fullscreen flex items-center justify-center">

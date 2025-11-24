@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './App.jsx';
-import Nuke from './components/Nuke.jsx';
 import './index.css';
 
 const target = document.getElementById('app');
@@ -13,7 +12,6 @@ ReactDOM.createRoot(target).render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="/nuke" element={<Nuke />} />
       </Routes>
     </BrowserRouter>
   </React.StrictMode>,
