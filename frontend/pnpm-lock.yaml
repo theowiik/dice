@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      cannon-es:
+        specifier: ^0.20.0
+        version: 0.20.0
       prop-types:
         specifier: ^15.8.1
         version: 15.8.1
@@ -20,6 +23,9 @@ importers:
       react-router-dom:
         specifier: ^7.9.6
         version: 7.9.6(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      three:
+        specifier: ^0.186.1
+        version: 0.186.1
     devDependencies:
       '@biomejs/biome':
         specifier: 2.3.5
@@ -598,6 +604,9 @@ packages:
   caniuse-lite@1.0.30001754:
     resolution: {integrity: sha512-x6OeBXueoAceOmotzx3PO4Zpt4rzpeIFsSr6AAePTZxSkXiYDUmpypEl7e2+8NCd9bD7bXjqyef8CJYPC1jfxg==}
 
+  cannon-es@0.20.0:
+    resolution: {integrity: sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA==}
+
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
@@ -849,6 +858,9 @@ packages:
   tapable@2.3.0:
     resolution: {integrity: sha512-g9ljZiwki/LfxmQADO3dEY1CbpmXT5Hm2fJ+QaGKwSXUylMybePR7/67YW7jOrrvjEgL1Fmz5kzyAjWVWLlucg==}
     engines: {node: '>=6'}
+
+  three@0.186.1:
+    resolution: {integrity: sha512-blFeqb49wRCSGUGj7gtpfnSGHy2lwDk94RhUmS1c/hTby70kvChbWpkJ4Pm1390LqzzvTmzgXKHPEafJwCb8jA==}
 
   tinyglobby@0.2.15:
     resolution: {integrity: sha512-j2Zq4NyQYG5XMST4cbs02Ak8iJUdxRM0XI5QyxXuZOzKOINmWurp3smXu3y5wDcJrptwpSjgXHzIQxR0omXljQ==}
@@ -1345,6 +1357,8 @@ snapshots:
 
   caniuse-lite@1.0.30001754: {}
 
+  cannon-es@0.20.0: {}
+
   convert-source-map@2.0.0: {}
 
   cookie@1.0.2: {}
@@ -1572,6 +1586,8 @@ snapshots:
   tailwindcss@4.1.17: {}
 
   tapable@2.3.0: {}
+
+  three@0.186.1: {}
 
   tinyglobby@0.2.15:
     dependencies:

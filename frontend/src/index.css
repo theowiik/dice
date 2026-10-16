@@ -1,15 +1,15 @@
 @import "tailwindcss";
-@import url("https://fonts.googleapis.com/css2?family=Momo+Trust+Display&family=Reddit+Mono:wght@200..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Unbounded:wght@400..900&display=swap");
 
 body {
   margin: 0;
   padding: 0;
-  background: #1c1917;
+  background: #0b0908;
   font-family:
-    "Momo Trust Display", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
-    Roboto, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji",
-    "Segoe UI Symbol";
+    "Unbounded", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    Arial, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   min-height: 100vh;
+  overflow: hidden;
 }
 
 @keyframes fadeIn {
@@ -25,4 +25,201 @@ body {
 
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
+}
+
+.vignette {
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    transparent 45%,
+    rgba(0, 0, 0, 0.65) 100%
+  );
+}
+
+.glass {
+  background: rgba(28, 25, 23, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+}
+
+.dice-button {
+  --glow: #ffffff;
+  position: relative;
+  padding: 0.7rem 1.15rem;
+  border-radius: 0.85rem;
+  font-weight: 600;
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+  color: #e7e5e4;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.07),
+    rgba(255, 255, 255, 0.01)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease,
+    opacity 0.2s ease;
+  cursor: pointer;
+}
+
+.dice-button:hover:not(:disabled) {
+  color: #fff;
+  border-color: color-mix(in srgb, var(--glow) 60%, transparent);
+  box-shadow:
+    0 0 18px color-mix(in srgb, var(--glow) 35%, transparent),
+    inset 0 0 12px color-mix(in srgb, var(--glow) 18%, transparent);
+  transform: translateY(-2px);
+}
+
+.dice-button:active:not(:disabled) {
+  transform: translateY(0) scale(0.96);
+}
+
+.dice-button-active {
+  color: #fff;
+  border-color: color-mix(in srgb, var(--glow) 70%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--glow) 28%, transparent),
+    color-mix(in srgb, var(--glow) 8%, transparent)
+  );
+  box-shadow: 0 0 22px color-mix(in srgb, var(--glow) 30%, transparent);
+}
+
+.dice-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .dice-button {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.9rem;
+  }
+}
+
+.result-number {
+  font-weight: 800;
+  font-size: clamp(4rem, 14vw, 9rem);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  text-shadow:
+    0 0 12px var(--glow),
+    0 0 40px var(--glow),
+    0 0 90px color-mix(in srgb, var(--glow) 60%, transparent);
+}
+
+.result-max {
+  background: linear-gradient(180deg, #fff 20%, var(--glow) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 18px var(--glow)) drop-shadow(0 0 50px var(--glow));
+  text-shadow: none;
+  animation: maxPulse 1.2s ease-in-out infinite alternate;
+}
+
+.result-min {
+  color: #fca5a5;
+  text-shadow:
+    0 0 12px #7f1d1d,
+    0 0 40px #b91c1c;
+  animation: minShake 0.5s ease-in-out;
+}
+
+.result-pop {
+  animation: resultPop 0.7s cubic-bezier(0.18, 1.4, 0.4, 1) both;
+}
+
+@keyframes resultPop {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.6);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes maxPulse {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@keyframes minShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-8px);
+  }
+  40%,
+  80% {
+    transform: translateX(8px);
+  }
+}
+
+.history-chip {
+  --glow: #fff;
+  flex: none;
+  min-width: 2.4rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: color-mix(in srgb, var(--glow) 55%, white);
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid color-mix(in srgb, var(--glow) 35%, transparent);
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Hide number-input spinners; they crowd the text. */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.nuke-flash {
+  background: radial-gradient(
+    circle at 50% 55%,
+    #fff 0%,
+    #fff6dc 45%,
+    #ffd08a 100%
+  );
+  animation: nukeFlash 2.6s ease-out forwards;
+}
+
+@keyframes nukeFlash {
+  0%,
+  8% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
