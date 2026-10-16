@@ -1,38 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import CustomDiceInput from './components/CustomDiceInput';
 import DiceButton from './components/DiceButton';
-import LinearSpinner from './components/LinearSpinner';
-import Nuke from './components/Nuke';
+import DiceStage from './components/DiceStage';
+import { THEMES, themeForSides } from './dice/themes';
 
 const MAX_SIDES = 1000000;
 const MIN_SIDES = 1;
 const NUKE_TRIGGER = 500;
+const HISTORY_SIZE = 10;
 
 const DICE_CONFIGS = [
-  {
-    sides: 6,
-    label: 'D6',
-    colorClass:
-      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
-  },
-  {
-    sides: 8,
-    label: 'D8',
-    colorClass:
-      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
-  },
-  {
-    sides: 20,
-    label: 'D20',
-    colorClass:
-      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
-  },
-  {
-    sides: 500,
-    label: '☢️ D500',
-    colorClass:
-      'from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700',
-  },
+  { sides: 6, label: 'D6' },
+  { sides: 8, label: 'D8' },
+  { sides: 10, label: 'D10' },
+  { sides: 12, label: 'D12' },
+  { sides: 20, label: 'D20' },
+  { sides: 500, label: '☢️ D500' },
 ];
 
 export default function App() {
@@ -40,37 +23,45 @@ export default function App() {
   const [isRolling, setIsRolling] = useState(false);
   const [customValue, setCustomValue] = useState('');
   const [showCustomInput, setShowCustomInput] = useState(false);
-  const [showNuke, setShowNuke] = useState(false);
-  const diceComponentRef = useRef(null);
+  const [history, setHistory] = useState([]);
+  const stageRef = useRef(null);
 
-  const handleRoll = () => {
-    if (isRolling) return;
-    setIsRolling(true);
-    diceComponentRef.current?.roll();
-  };
-
-  const handleRollComplete = (finalValue) => {
-    setIsRolling(false);
-    // Trigger nuke if roll is exactly 500
-    if (finalValue === NUKE_TRIGGER) {
-      setShowNuke(true);
+  const startRoll = useCallback((sides, options) => {
+    if (stageRef.current?.roll(sides, options)) {
+      setIsRolling(true);
     }
+  }, []);
+
+  const handleRollComplete = (result) => {
+    // A 500 detonates; controls stay locked until the cloud clears.
+    if (!result.nuke) setIsRolling(false);
+    setHistory((h) =>
+      [{ ...result, id: performance.now() }, ...h].slice(0, HISTORY_SIZE),
+    );
   };
 
-  const handleNukeComplete = () => {
-    setShowNuke(false);
-  };
-
-  // Secret keyboard shortcut: Ctrl+Alt+N or Cmd+Alt+N
   useEffect(() => {
     const handleKeyDown = (event) => {
+      // Secret keyboard shortcut: Ctrl+Alt+N or Cmd+Alt+N throws a rigged D500
       if (
         (event.ctrlKey || event.metaKey) &&
         event.altKey &&
         event.key.toLowerCase() === 'n'
       ) {
         event.preventDefault();
-        setShowNuke(true);
+        setDiceType(NUKE_TRIGGER);
+        setShowCustomInput(false);
+        startRoll(NUKE_TRIGGER, { force: NUKE_TRIGGER });
+        return;
+      }
+      const tag = event.target?.tagName;
+      if (
+        (event.key === ' ' || event.key === 'Enter') &&
+        tag !== 'INPUT' &&
+        tag !== 'BUTTON'
+      ) {
+        event.preventDefault();
+        startRoll(diceType);
       }
     };
 
@@ -78,18 +69,13 @@ export default function App() {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [diceType, startRoll]);
 
   const handleDiceClick = (sides) => {
     if (isRolling) return;
     setDiceType(sides);
     setShowCustomInput(false);
-    setTimeout(() => {
-      if (!isRolling) {
-        setIsRolling(true);
-        diceComponentRef.current?.roll();
-      }
-    }, 0);
+    startRoll(sides);
   };
 
   const handleCustomClick = () => {
@@ -100,7 +86,6 @@ export default function App() {
     const value = parseInt(event.target.value, 10);
     if (!Number.isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
       setCustomValue(value.toString());
-      setDiceType(value);
     } else if (event.target.value === '') {
       setCustomValue('');
     }
@@ -110,52 +95,67 @@ export default function App() {
     const value = parseInt(customValue, 10);
     if (!Number.isNaN(value) && value >= MIN_SIDES && value <= MAX_SIDES) {
       setDiceType(value);
-      handleRoll();
+      startRoll(value);
     }
   };
 
+  const isCustom = !DICE_CONFIGS.some((c) => c.sides === diceType);
+
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-stone-900">
-      {showNuke && <Nuke onComplete={handleNukeComplete} />}
+    <main className="min-h-screen overflow-hidden bg-stone-950 text-stone-100">
+      <DiceStage
+        ref={stageRef}
+        onRollComplete={handleRollComplete}
+        onNukeEnd={() => setIsRolling(false)}
+        onStageGrab={(pointer) => startRoll(diceType, { pointer })}
+      />
 
-      <div className="w-full flex flex-col items-center gap-8">
-        <div className="w-full spinner-fullscreen flex items-center justify-center">
-          <LinearSpinner
-            ref={diceComponentRef}
-            sides={diceType}
-            onRollComplete={handleRollComplete}
-          />
-        </div>
-
-        <div className="flex flex-col items-center gap-6 px-4 sm:px-8">
-          <div className="inline-flex flex-col items-stretch gap-6">
-            <div className="flex flex-wrap justify-center gap-3">
-              {DICE_CONFIGS.map((config) => (
-                <DiceButton
-                  key={config.sides}
-                  label={config.label}
-                  onClick={() => handleDiceClick(config.sides)}
-                  disabled={isRolling}
-                  colorClass={config.colorClass}
-                />
-              ))}
-              <DiceButton
-                label="Custom"
-                onClick={handleCustomClick}
-                disabled={isRolling}
-                colorClass="from-stone-700 to-stone-800 hover:from-stone-600 hover:to-stone-700"
-              />
-            </div>
-
-            {showCustomInput && (
-              <CustomDiceInput
-                value={customValue}
-                onInput={handleCustomInput}
-                onRoll={handleCustomRoll}
-                disabled={isRolling}
-              />
-            )}
+      <div className="pointer-events-none fixed inset-x-0 bottom-0 z-10 flex flex-col items-center gap-3 px-4 pb-5 sm:pb-8">
+        {history.length > 0 && (
+          <div className="flex max-w-full gap-2 overflow-hidden">
+            {history.map((h, i) => (
+              <span
+                key={h.id}
+                className="history-chip"
+                style={{
+                  '--glow': THEMES[themeForSides(h.sides)].glow,
+                  opacity: 1 - i * 0.08,
+                }}
+                title={`d${h.sides}`}
+              >
+                {h.value.toLocaleString()}
+              </span>
+            ))}
           </div>
+        )}
+
+        {showCustomInput && (
+          <CustomDiceInput
+            value={customValue}
+            onInput={handleCustomInput}
+            onRoll={handleCustomRoll}
+            disabled={isRolling}
+          />
+        )}
+
+        <div className="pointer-events-auto glass flex flex-wrap justify-center gap-2 rounded-2xl p-2 sm:gap-3 sm:p-3">
+          {DICE_CONFIGS.map((config) => (
+            <DiceButton
+              key={config.sides}
+              label={config.label}
+              onClick={() => handleDiceClick(config.sides)}
+              disabled={isRolling}
+              active={diceType === config.sides}
+              glow={THEMES[themeForSides(config.sides)].glow}
+            />
+          ))}
+          <DiceButton
+            label="Custom"
+            onClick={handleCustomClick}
+            disabled={isRolling}
+            active={isCustom || showCustomInput}
+            glow={THEMES.custom.glow}
+          />
         </div>
       </div>
     </main>
